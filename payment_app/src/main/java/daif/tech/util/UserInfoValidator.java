@@ -6,8 +6,9 @@ import java.util.regex.Pattern;
 public class UserInfoValidator {
 
     public static boolean validatePhoneNumber(String phoneNumber) {
-        if (phoneNumber.contains(" ") || phoneNumber.length() != 11) {
-            System.out.println("Phone number can't contain spaces and it's length must be 11");
+        String egyptianNumberRegex = "^(010|011|012|015)\\d{8}$";
+        if(!phoneNumber.matches(egyptianNumberRegex)){
+            System.out.println("Phone number should be 11 digit starting with 010, 011, 012 or 015");
             return false;
         }
         return true;
@@ -25,8 +26,8 @@ public class UserInfoValidator {
     }
 
     public static boolean validatePasswordLength(String password) {
-        if(password.length() != 8){
-            System.out.println("Password length should be 8");
+        if(password.length() < 8){
+            System.out.println("Password length should be 8 or more");
             return false;
         }
         return true;

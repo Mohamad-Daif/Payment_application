@@ -4,6 +4,7 @@ import daif.tech.service.RegisterBoardService;
 import daif.tech.util.UserInfoValidator;
 
 import java.math.BigDecimal;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class RegisterBoard {
@@ -59,15 +60,20 @@ public class RegisterBoard {
             String choice = get.nextLine();
             choice = choice.trim();
             boolean isValidCharacterOption = UserInfoValidator.isValidOptionCharacter(choice);
-            if (isValidCharacterOption) {
-                if (choice.equalsIgnoreCase("y")) {
-                    System.out.println("Enter amount : ");
-                    initialBalance = get.nextBigDecimal();
-                    isValidBalanceOptionChoice = true;
-                } else if (choice.equalsIgnoreCase("n")) {
-                    initialBalance = new BigDecimal(0);
-                    isValidBalanceOptionChoice = true;
+            try{
+                if (isValidCharacterOption) {
+                    if (choice.equalsIgnoreCase("y")) {
+                        System.out.println("Enter amount : ");
+                        initialBalance = get.nextBigDecimal();
+                        isValidBalanceOptionChoice = true;
+                    } else if (choice.equalsIgnoreCase("n")) {
+                        initialBalance = new BigDecimal(0);
+                        isValidBalanceOptionChoice = true;
+                    }
                 }
+            }catch (InputMismatchException e){
+                System.out.println("Please enter a valid positive numeric value");
+                get.nextLine();
             }
         }
 

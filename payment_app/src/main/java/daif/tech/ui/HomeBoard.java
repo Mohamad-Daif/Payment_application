@@ -4,6 +4,7 @@ import daif.tech.model.User;
 import daif.tech.service.HomeBoardService;
 
 import java.math.BigDecimal;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class HomeBoard {
@@ -67,13 +68,21 @@ public class HomeBoard {
         while (!isPhoneNumberExists){
             System.out.println("Enter the phone number that you want to transfer to : ");
             String receiverPhoneNumber = new Scanner(System.in).nextLine();
-            isPhoneNumberExists = homeBoardService.checkIfUserExists(receiverPhoneNumber);
-            if(isPhoneNumberExists){
-                System.out.println("Enter amount you want to transfer : ");
-                BigDecimal amount = new Scanner(System.in).nextBigDecimal();
-                homeBoardService.transfer(receiverPhoneNumber,amount);
-            }else{
-                System.out.println("There is no user with this phone number");
+            try{
+                isPhoneNumberExists = homeBoardService.checkIfUserExists(receiverPhoneNumber);
+                if(isPhoneNumberExists){
+                    System.out.println("Enter amount you want to transfer : ");
+                    try{
+                        BigDecimal amount = new Scanner(System.in).nextBigDecimal();
+                        homeBoardService.transfer(receiverPhoneNumber,amount);
+                    }catch (InputMismatchException e){
+                        System.out.println("Kindly enter a valid positive numeric value");
+                    }
+                }else{
+                    System.out.println("There is no user with this phone number");
+                }
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
 
@@ -81,14 +90,26 @@ public class HomeBoard {
 
     private void showWithdrawBoard() {
         System.out.println("Enter the amount that you want to withdraw : ");
-        BigDecimal amount = new Scanner(System.in).nextBigDecimal();
-        homeBoardService.withdraw(amount);
+        try{
+            BigDecimal amount = new Scanner(System.in).nextBigDecimal();
+            homeBoardService.withdraw(amount);
+        }catch (InputMismatchException e){
+            System.out.println("Please enter a valid positive numeric value");
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void showDepositBoard() {
         System.out.println("Enter the amount that you want to deposit : ");
-        BigDecimal amount = new Scanner(System.in).nextBigDecimal();
-        homeBoardService.deposit(amount);
+        try{
+            BigDecimal amount = new Scanner(System.in).nextBigDecimal();
+            homeBoardService.deposit(amount);
+        }catch (InputMismatchException e){
+            System.out.println("Please enter a valid positive numeric value");
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
     }
 
 
