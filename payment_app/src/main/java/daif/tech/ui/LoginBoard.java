@@ -32,7 +32,7 @@ public class LoginBoard {
         String username = "",password = "";
 
         while(!isValidUserName){
-            System.out.print("Enter your phone number : ");
+            System.out.print("Enter your user name : ");
             username = get.nextLine();
             numberOfAttempts++;
             if(numberOfAttempts == 4) {

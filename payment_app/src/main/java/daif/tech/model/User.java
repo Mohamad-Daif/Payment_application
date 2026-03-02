@@ -15,6 +15,10 @@ public class User {
         this.balance = balance;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public int getAge() {
         return age;
     }

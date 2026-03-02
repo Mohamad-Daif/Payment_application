@@ -8,6 +8,7 @@ import daif.tech.repo.UserDB;
 import daif.tech.util.UserInfoValidator;
 
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 public class HomeBoardService {
 
@@ -54,7 +55,7 @@ public class HomeBoardService {
             throw new IllegalArgumentException("Amount can't be negative value");
         }
         userDB.withdraw(user.getUserKey(),amount);
-        System.out.println(String.format("Amount withdrawn successfully",amount.doubleValue()));
+        System.out.printf("Amount withdrawn successfully%n",amount.doubleValue());
         transactionDB.logNewTransaction(new Transaction(
                 String.format("User with user name : \"%s\" is withdrawing %.2f",user.getUserName(),amount.doubleValue())
         ));
@@ -71,5 +72,42 @@ public class HomeBoardService {
         transactionDB.logNewTransaction(new Transaction(
                 String.format("User with user name : \"%s\" is transferring %.2f to \"%s\"",user.getUserName(),amount.doubleValue(),receiverPhoneNumber)
         ));
+    }
+
+    public void showAccountDetails(){
+        System.out.printf("""
+                        ############################
+                        Account Details :
+                        username : %s.
+                        age : [%d].
+                        phoneNumber : %s.
+                        balance : [%.2f].%n
+                        #############################""",
+                user.getUserName(),
+                user.getAge(),
+                user.getPhoneNumber(),
+                user.getBalance());
+    }
+
+    public void changePassword() throws IllegalArgumentException{
+        System.out.println("Enter current password: ");
+        String currentPassword = new Scanner(System.in).nextLine();
+        boolean isValidNewPassword = false;
+        String newEnteredPassword = "";
+        if(user.getPassword().equals(currentPassword)){
+            while (!isValidNewPassword){
+                System.out.println("Enter new password: ");
+                newEnteredPassword = new Scanner(System.in).nextLine();
+                if(user.getPassword().equals(newEnteredPassword)) throw new IllegalArgumentException("New password should not match the current one");
+                isValidNewPassword = UserInfoValidator.validatePassword(newEnteredPassword);
+            }
+        }else{
+            System.out.println("Invalid Password");
+        }
+
+        if(isValidNewPassword){
+            user.setPassword(newEnteredPassword);
+            System.out.println("Password changed successfully");
+        }
     }
 }

@@ -41,16 +41,28 @@ public class HomeBoard {
                 2. Withdraw.
                 3. viewBalance.
                 4. Transfer.
-                5. logout.""");
+                5. showAccountDetails.
+                6. changePassword.
+                7.  Logout.""");
             int choice = new Scanner(System.in).nextInt();
             switch (choice){
                 case 1 -> showDepositBoard();
                 case 2 -> showWithdrawBoard();
                 case 3 -> viewBalance();
                 case 4 -> showTransferBoard();
-                case 5 -> logoutAndBackToMainBoard();
+                case 5 -> showAccountDetails();
+                case 6 -> changePassword();
+                case 7 -> logoutAndBackToMainBoard();
             }
         }
+    }
+
+    private void changePassword() {
+        homeBoardService.changePassword();
+    }
+
+    private void showAccountDetails() {
+        homeBoardService.showAccountDetails();
     }
 
     private void viewBalance() {
