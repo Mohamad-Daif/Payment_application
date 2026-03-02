@@ -89,25 +89,10 @@ public class HomeBoardService {
                 user.getBalance());
     }
 
-    public void changePassword() throws IllegalArgumentException{
-        System.out.println("Enter current password: ");
-        String currentPassword = new Scanner(System.in).nextLine();
-        boolean isValidNewPassword = false;
-        String newEnteredPassword = "";
-        if(user.getPassword().equals(currentPassword)){
-            while (!isValidNewPassword){
-                System.out.println("Enter new password: ");
-                newEnteredPassword = new Scanner(System.in).nextLine();
-                if(user.getPassword().equals(newEnteredPassword)) throw new IllegalArgumentException("New password should not match the current one");
-                isValidNewPassword = UserInfoValidator.validatePassword(newEnteredPassword);
-            }
-        }else{
-            System.out.println("Invalid Password");
-        }
-
-        if(isValidNewPassword){
-            user.setPassword(newEnteredPassword);
-            System.out.println("Password changed successfully");
-        }
+    public boolean isCurrentPassword(String enteredPassword){
+        return user.getPassword().equals(enteredPassword);
+    }
+    public void changePassword(String newPassword) throws IllegalArgumentException{
+        user.setPassword(newPassword);
     }
 }

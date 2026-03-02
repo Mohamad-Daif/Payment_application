@@ -3,6 +3,7 @@ package daif.tech.ui;
 import daif.tech.exception.UserNotFoundException;
 import daif.tech.model.User;
 import daif.tech.service.HomeBoardService;
+import daif.tech.util.UserInfoValidator;
 
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
@@ -58,7 +59,25 @@ public class HomeBoard {
     }
 
     private void changePassword() {
-        homeBoardService.changePassword();
+        System.out.println("Enter current password: ");
+        String currentPassword = new Scanner(System.in).nextLine();
+        boolean isValidNewPassword = false;
+        String newEnteredPassword = "";
+        if(homeBoardService.isCurrentPassword(currentPassword)){
+            while (!isValidNewPassword){
+                System.out.println("Enter new password: ");
+                newEnteredPassword = new Scanner(System.in).nextLine();
+                if(currentPassword.equals(newEnteredPassword)) throw new IllegalArgumentException("New password should not match the current one");
+                isValidNewPassword = UserInfoValidator.validatePassword(newEnteredPassword);
+            }
+        }else{
+            System.out.println("Invalid Password");
+        }
+
+        if(isValidNewPassword){
+            homeBoardService.changePassword(newEnteredPassword);
+            System.out.println("Password changed successfully");
+        }
     }
 
     private void showAccountDetails() {
