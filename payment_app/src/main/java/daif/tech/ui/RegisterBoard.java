@@ -1,11 +1,11 @@
 package daif.tech.ui;
 
+import daif.tech.exception.InvalidEnteredAge;
 import daif.tech.service.RegisterBoardService;
 import daif.tech.util.UserInfoValidator;
 
 import java.math.BigDecimal;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class RegisterBoard {
 
@@ -31,7 +31,24 @@ public class RegisterBoard {
         boolean isValidUserName = false,
                 isValidPhoneNumber = false,
                 isValidBalanceOptionChoice = false,
-                isValidPassword = false;
+                isValidPassword = false,
+                isValidAge = false;
+
+        int age = 0;
+        while (!isValidAge){
+            System.out.print("Please enter your age: ");
+            try{
+
+                String input = get.nextLine();
+
+                // will fail in case the user entered anything rather than digits.
+                // Also decimals are declined.
+                isValidAge = validateEnteredAge(input);
+                age = Integer.parseInt(input);
+            }catch (InputMismatchException | InvalidEnteredAge  iea){
+                System.out.println(iea.getMessage());
+            }
+        }
 
         String username = "";
         while (!isValidUserName) {
@@ -51,7 +68,7 @@ public class RegisterBoard {
         while (!isValidPassword){
             System.out.println("Enter your password : ");
             password = get.nextLine();
-            isValidPassword = UserInfoValidator.validatePasswordLength(password);
+            isValidPassword = UserInfoValidator.validatePassword(password);
         }
 
         BigDecimal initialBalance = new BigDecimal(0);
@@ -77,8 +94,21 @@ public class RegisterBoard {
             }
         }
 
-        registerBoardService.registerUser(username,password,phoneNumber,initialBalance);
+        registerBoardService.registerUser(username,password,phoneNumber,age,initialBalance);
 
+    }
+
+    private boolean validateEnteredAge(String ageInString)throws InvalidEnteredAge{
+        if(ageInString.chars().anyMatch(character -> !Character.isDigit(character))){
+            throw new InvalidEnteredAge();
+        }
+
+        int age = Integer.parseInt(ageInString);
+
+        if(age < 18 ){
+            throw new InvalidEnteredAge();
+        }
+        return true;
     }
 
 

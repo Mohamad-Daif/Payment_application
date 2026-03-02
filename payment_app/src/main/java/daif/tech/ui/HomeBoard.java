@@ -1,5 +1,6 @@
 package daif.tech.ui;
 
+import daif.tech.exception.UserNotFoundException;
 import daif.tech.model.User;
 import daif.tech.service.HomeBoardService;
 
@@ -77,6 +78,8 @@ public class HomeBoard {
                         homeBoardService.transfer(receiverPhoneNumber,amount);
                     }catch (InputMismatchException e){
                         System.out.println("Kindly enter a valid positive numeric value");
+                    }catch (UserNotFoundException userNotFoundException){
+                        System.out.println(userNotFoundException.getMessage());
                     }
                 }else{
                     System.out.println("There is no user with this phone number");

@@ -6,29 +6,19 @@ import daif.tech.model.User;
 import daif.tech.repo.TransactionDB;
 import daif.tech.repo.UserDB;
 
-import java.util.Optional;
-
 public class LoginBoardService {
 
     private UserDB userDB = new UserDB();
     private TransactionDB transactionDB = new TransactionDB();
 
-    public Optional<User> login(String phoneNumber,String password){
-        Optional<User> user = Optional.empty();
-        try {
-            user = userDB.getUser(phoneNumber,password);
-            if(user.isPresent()) {
+    public User login(String username, String password) throws InvalidCredentialsException {
+        User user;
+        user = userDB.getUser(username, password);
+        System.out.println("Welcome back, " + user.getUserName());
 
-                System.out.println("Welcome back, "+user.get().getUserName());
-
-                transactionDB.logNewTransaction(new Transaction(
-                        String.format("User with user name : \"%s\" is logging in",user.get().getUserName())
-                ));
-
-            }
-        } catch (InvalidCredentialsException e) {
-            System.out.println("failed while login : "+e.getMessage());
-        }
+        transactionDB.logNewTransaction(new Transaction(
+                String.format("User with user name : \"%s\" is logging in", user.getUserName())
+        ));
         return user;
     }
 }

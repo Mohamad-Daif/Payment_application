@@ -1,10 +1,10 @@
 package daif.tech.ui;
 
+import daif.tech.exception.InvalidCredentialsException;
 import daif.tech.model.User;
 import daif.tech.service.LoginBoardService;
 import daif.tech.util.UserInfoValidator;
 
-import java.util.Optional;
 import java.util.Scanner;
 
 public class LoginBoard {
@@ -25,25 +25,40 @@ public class LoginBoard {
     LoginBoardService loginBoardService = new LoginBoardService();
 
     public void showLoginBoard(){
+        int numberOfAttempts = 0;
         Scanner get = new Scanner(System.in);
 
-        boolean isValidPhoneNumber = false,isValidPassword = false;
-        String phoneNumber = "",password = "";
+        boolean isValidUserName = false,isValidPassword = false;
+        String username = "",password = "";
 
-        while(!isValidPhoneNumber){
+        while(!isValidUserName){
             System.out.print("Enter your phone number : ");
-            phoneNumber = get.nextLine();
-            isValidPhoneNumber = UserInfoValidator.validatePhoneNumber(phoneNumber);
+            username = get.nextLine();
+            numberOfAttempts++;
+            if(numberOfAttempts == 4) {
+                System.out.println("You exceeded the number of attempts");
+                System.exit(0);
+            }
+            isValidUserName = UserInfoValidator.validateEnteredUserName(username);
         }
 
 
         while (!isValidPassword){
             System.out.print("Enter your password : ");
             password = get.nextLine();
-            isValidPassword = UserInfoValidator.validatePasswordLength(password);
+            numberOfAttempts++;
+            if(numberOfAttempts == 4) {
+                System.out.println("You exceeded the number of attempts");
+                System.exit(0);
+            }
+            isValidPassword = UserInfoValidator.validatePassword(password);
         }
 
-        Optional<User> user = loginBoardService.login(phoneNumber,password);
-        user.ifPresent(value -> PagesContext.HOME_BOARD.showHomeBoard(value));
+       try{
+           User user = loginBoardService.login(username,password);
+           PagesContext.HOME_BOARD.showHomeBoard(user);
+       }catch (RuntimeException | InvalidCredentialsException e){
+           System.out.println(e.getMessage());
+       }
     }
 }

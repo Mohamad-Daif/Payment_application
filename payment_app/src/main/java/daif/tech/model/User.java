@@ -3,20 +3,28 @@ package daif.tech.model;
 import java.math.BigDecimal;
 
 public class User {
-    private String userName;
+    private UserKey userKey;
     private String password;
-    private String phoneNumber;
     private BigDecimal balance;
+    private int age;
 
-    public User(String userName, String password, String phoneNumber, BigDecimal balance) {
-        this.userName = userName;
+    public User(String userName, String password, String phoneNumber,int age, BigDecimal balance) {
+        this.userKey = new UserKey(phoneNumber,userName);
         this.password = password;
-        this.phoneNumber = phoneNumber;
+        this.age = age;
         this.balance = balance;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public UserKey getUserKey() {
+        return userKey;
+    }
+
     public String getUserName() {
-        return userName;
+        return userKey.getUserName();
     }
 
     public String getPassword() {
@@ -24,7 +32,7 @@ public class User {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return userKey.getPhoneNumber();
     }
 
     public BigDecimal getBalance() {
@@ -43,5 +51,15 @@ public class User {
         }else{
             balance = balance.subtract(amount);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userKey=" + userKey +
+                ", password='" + password + '\'' +
+                ", balance=" + balance +
+                ", age=" + age +
+                '}';
     }
 }

@@ -1,5 +1,6 @@
 package daif.tech.service;
 
+import daif.tech.exception.UserNotFoundException;
 import daif.tech.model.Transaction;
 import daif.tech.model.User;
 import daif.tech.repo.TransactionDB;
@@ -34,14 +35,14 @@ public class HomeBoardService {
             throw new IllegalArgumentException("User can't transfer for him self");
         }
 
-        return userDB.isUserExists(phoneNumber);
+        return userDB.isUserExists(user.getUserKey());
     }
 
     public void deposit(BigDecimal amount) throws IllegalArgumentException{
         if(amount.doubleValue() < 0){
             throw new IllegalArgumentException("Amount can't be negative value");
         }
-        userDB.deposit(user.getPhoneNumber(),amount);
+        userDB.deposit(user.getUserKey(),amount);
         System.out.println("Deposited successfully");
         transactionDB.logNewTransaction(new Transaction(
                 String.format("User with user name : \"%s\" is depositing %.2f",user.getUserName(),amount.doubleValue())
@@ -52,7 +53,7 @@ public class HomeBoardService {
         if(amount.doubleValue() < 0){
             throw new IllegalArgumentException("Amount can't be negative value");
         }
-        userDB.withdraw(user.getPhoneNumber(),amount);
+        userDB.withdraw(user.getUserKey(),amount);
         System.out.println(String.format("Amount withdrawn successfully",amount.doubleValue()));
         transactionDB.logNewTransaction(new Transaction(
                 String.format("User with user name : \"%s\" is withdrawing %.2f",user.getUserName(),amount.doubleValue())
@@ -60,12 +61,12 @@ public class HomeBoardService {
     }
 
     public double getBalance(){
-        return userDB.getBalance(user.getPhoneNumber());
+        return userDB.getBalance(user.getUserKey());
     }
 
-    public void transfer(String receiverPhoneNumber,BigDecimal amount){
+    public void transfer(String receiverPhoneNumber,BigDecimal amount) throws UserNotFoundException {
 
-        userDB.transferToUser(user.getPhoneNumber(),receiverPhoneNumber,amount);
+        userDB.transferToUser(user.getUserKey(),receiverPhoneNumber,amount);
         System.out.println("Transfer process is done successfully");
         transactionDB.logNewTransaction(new Transaction(
                 String.format("User with user name : \"%s\" is transferring %.2f to \"%s\"",user.getUserName(),amount.doubleValue(),receiverPhoneNumber)
